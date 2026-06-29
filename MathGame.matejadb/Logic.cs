@@ -55,9 +55,9 @@ public class Logic
         Console.WriteLine("==============HISTORY==============");
         foreach (History history in _histories)
         {
-            Console.WriteLine($"Game {history.GameNumber}: {history.Points} points");
+            Console.WriteLine($"Game {history.GameNumber}: {history.Answer}. Points recieved: {history.Points}\n");
         }
-        Console.WriteLine("==================================");
+        Console.WriteLine("==================================\n");
     }
 
     void NewGame()
@@ -78,17 +78,22 @@ public class Logic
             Question question = GenerateQuestion();
 
             Console.Write($"{i + 1}. {question.Number1} {question.Mark} {question.Number2} = ");
+
+            
             string? answer = Console.ReadLine();
-            totalPoints = CheckAnswer(answer, question, totalPoints);
+            bool correctAnswer = CheckAnswer(answer, question);
+
+            totalPoints += correctAnswer ? 1 : 0;
+
+            _histories.Add(new History() { GameNumber = _gameNumber, Answer = $"{question.Number1} {question.Mark} {question.Number2} = {answer}" ,Points = correctAnswer ? 1 : 0});
         }
 
-        _histories.Add(new History() { GameNumber = _gameNumber, Points = totalPoints });
 
         Console.WriteLine($"Game ended! Your total points: {totalPoints}/{numberOfRounds}");
         GameMenu();
     }
 
-    static int CheckAnswer(string answer, Question question, int totalPoints)
+    static bool CheckAnswer(string answer, Question question)
     {
         double result = 0;
 
@@ -111,9 +116,9 @@ public class Logic
                 break;
         }
 
-        if (int.TryParse(answer, out var userAnswer) && userAnswer == result) totalPoints++;
+        if (int.TryParse(answer, out var userAnswer) && userAnswer == result) return true;
 
-        return totalPoints;
+        return false;
     }
 
     static Question GenerateQuestion()
