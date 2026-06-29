@@ -76,8 +76,9 @@ public class Logic
             Console.WriteLine($"Round {i + 1} of {numberOfRounds} \t\t Points: {totalPoints}");
 
             Question question = GenerateQuestion();
+            string questionStr = ConvertQuestionToString(question);
 
-            Console.Write($"{i + 1}. {question.Number1} {question.Mark} {question.Number2} = ");
+            Console.Write($"{i + 1}. {questionStr}");
 
             
             string? answer = Console.ReadLine();
@@ -85,7 +86,7 @@ public class Logic
 
             totalPoints += correctAnswer ? 1 : 0;
 
-            _histories.Add(new History() { GameNumber = _gameNumber, Answer = $"{question.Number1} {question.Mark} {question.Number2} = {answer}" ,Points = correctAnswer ? 1 : 0});
+            _histories.Add(new History() { GameNumber = _gameNumber, Answer = $"{questionStr}{answer}" ,Points = correctAnswer ? 1 : 0});
         }
 
 
@@ -119,6 +120,10 @@ public class Logic
         if (int.TryParse(answer, out var userAnswer) && userAnswer == result) return true;
 
         return false;
+    }
+
+    static string ConvertQuestionToString(Question question) {
+        return $"{question.Number1} {question.Mark} {question.Number2} = ";
     }
 
     static Question GenerateQuestion()
