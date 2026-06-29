@@ -15,9 +15,13 @@ public class Logic
     {
         Console.WriteLine("==================================");
         Console.WriteLine("Welcome to the Math Game!");
-        Console.WriteLine("1. New Game");
-        Console.WriteLine("2. Game History");
-        Console.WriteLine("3. Exit");
+        Console.WriteLine("1. New Random Game");
+        Console.WriteLine("2. Practice Addition");
+        Console.WriteLine("3. Practice Subtraction");
+        Console.WriteLine("4. Practice Multiplication");
+        Console.WriteLine("5. Practice Division");
+        Console.WriteLine("6. Game History");
+        Console.WriteLine("7. Exit");
         Console.WriteLine("==================================");
 
         SelectOption();
@@ -36,10 +40,26 @@ public class Logic
                 break;
             case "2":
                 Console.Clear();
+                NewGame("+");
+                break;
+            case "3":
+                Console.Clear();
+                NewGame("-");
+                break;
+            case "4":
+                Console.Clear();
+                NewGame("*");
+                break;
+            case "5":
+                Console.Clear();
+                NewGame("/");
+                break;
+            case "6":
+                Console.Clear();
                 ShowHistory();
                 GameMenu();
                 break;
-            case "3":
+            case "7":
                 Console.WriteLine("See you soon!");
                 Environment.Exit(0);
                 break;
@@ -60,7 +80,7 @@ public class Logic
         Console.WriteLine("==================================\n");
     }
 
-    void NewGame()
+    void NewGame(string userSelection = null)
     {
         Console.WriteLine("==================================");
         Console.WriteLine("New Game Started. Good luck!");
@@ -75,7 +95,7 @@ public class Logic
             Console.WriteLine("==================================");
             Console.WriteLine($"Round {i + 1} of {numberOfRounds} \t\t Points: {totalPoints}");
 
-            Question question = GenerateQuestion();
+            Question question = GenerateQuestion(userSelection);
             string questionStr = ConvertQuestionToString(question);
 
             Console.Write($"{i + 1}. {questionStr}");
@@ -86,7 +106,7 @@ public class Logic
 
             totalPoints += correctAnswer ? 1 : 0;
 
-            _histories.Add(new History() { GameNumber = _gameNumber, Answer = $"{questionStr}{answer}" ,Points = correctAnswer ? 1 : 0});
+            _histories.Add(new History() { GameNumber = _gameNumber, Answer = $"{questionStr}{answer}", Points = correctAnswer ? 1 : 0});
         }
 
 
@@ -126,17 +146,17 @@ public class Logic
         return $"{question.Number1} {question.Mark} {question.Number2} = ";
     }
 
-    static Question GenerateQuestion()
+    static Question GenerateQuestion(string selectedOperation)
     {
         char[] marks = ['+', '-', '*', '/'];
 
         double num1 = _random.Next(0, 101);
         double num2 = _random.Next(1, 101);
-        char mark = marks[_random.Next(marks.Length)];
+        char mark = selectedOperation != null ? Convert.ToChar(selectedOperation) : marks[_random.Next(marks.Length)];
 
         if (mark == '/' && num1 % num2 != 0)
         {
-            return GenerateQuestion();
+            return GenerateQuestion(selectedOperation);
         }
 
         return new Question(num1, num2, mark);
